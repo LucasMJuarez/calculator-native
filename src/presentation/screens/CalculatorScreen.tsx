@@ -9,7 +9,10 @@ const CalculatorScreen = () => {
   return (
     <View style={styles.calculatorContainer}>
       <View style={{paddingHorizontal: 30, paddingBottom: 20}}>
-        <Text style={styles.mainResult}>{number}</Text>
+        <Text 
+        adjustsFontSizeToFit
+        numberOfLines={1}
+        style={styles.mainResult}>{number}</Text>
         <Text style={styles.subResult}>0</Text>
       </View>
       <View style={styles.row}>
