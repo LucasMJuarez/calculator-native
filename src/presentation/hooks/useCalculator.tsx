@@ -1,10 +1,23 @@
-import React from 'react';
+import  { useState, useRef } from 'react';
+
+
+enum Operator {
+  add,
+  subtract,
+  multiply,
+  divide,
+}
+
 
 const useCalculator = () => {
-  const [number, setNumber] = React.useState('0');
+  const [number, setNumber] = useState('0');
+  const [prevNumber, setPrevNumber] = useState('0');
+
+  const lastOperation = useRef<Operator>(Operator.add);
 
   const clean = () => {
     setNumber('0');
+    setPrevNumber('0');
   };
 
   const deleteOperation = () => {
@@ -68,14 +81,79 @@ const useCalculator = () => {
     //Si el numero no empieza con cero
     setNumber(number + numberString);
   };
+
+
+  const setLastNumber = () => {
+    if(number.endsWith('.')) {
+      setPrevNumber(number.slice(0, -1));
+    }else {
+      setPrevNumber(number);
+    }
+    setNumber('0');
+  }
+
+
+  const divideOperation = () => {
+    setLastNumber();
+    lastOperation.current = Operator.divide;
+  }
+   const multiplyOperation = () => {
+    setLastNumber();
+    lastOperation.current = Operator.multiply;
+  }
+   const subtractOperation = () => {
+    setLastNumber();
+    lastOperation.current = Operator.subtract;
+  }
+   const addOperation = () => {
+    setLastNumber();
+    lastOperation.current = Operator.add;
+  }
+
+
+  const calculateResult = () => {
+    const num1 = Number(number); //NaN if not a number
+    const num2 = Number(prevNumber); //NaN if not a number
+
+    switch (lastOperation.current) {
+      case Operator.add:
+        setNumber( `${num1 + num2}`);
+        break;
+      case Operator.subtract:
+        setNumber(`${num2 - num1}`);
+        break;
+
+      case Operator.multiply:
+        setNumber(`${num1 * num2}`);
+        break;
+      case Operator.divide:
+        if (num1 === 0) {
+          setNumber('0');
+        } else {
+          setNumber(`${num2 / num1}`);
+        }
+        break;
+      default:
+        setNumber('0');
+        break;
+    }
+    setPrevNumber('0');
+    lastOperation.current = Operator.add; //Reset to default operation
+  }
   return {
     //Properties
     number,
     toggleSign,
+    prevNumber,
     //Methods
     buildNumber,
     clean,
     deleteOperation,
+    divideOperation,
+    multiplyOperation,
+    subtractOperation,
+    addOperation,
+    calculateResult
   };
 };
 
