@@ -2,8 +2,6 @@ import React from 'react'
 import { Pressable, Text } from 'react-native'
 import { colors, styles } from '../../config/theme/app-theme'
 
-
-
 interface Props {
     label:string;
     color?: string;
